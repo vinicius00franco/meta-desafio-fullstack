@@ -1,4 +1,4 @@
-export interface ICheckoutResponse {
+export interface RespostaCheckout {
   id: string;
   produtoId: string;
   quantidade: number;
@@ -6,14 +6,14 @@ export interface ICheckoutResponse {
   estoqueAtual: number;
 }
 
-export interface IErroResponse {
+export interface RespostaErro {
   mensagem: string;
   estoqueDisponivel?: number;
 }
 
-export type CheckoutResult = {
+export type ResultadoCheckout = {
   sucesso: true;
-  dados: ICheckoutResponse;
+  dados: RespostaCheckout;
 } | {
   sucesso: false;
   erro: string;

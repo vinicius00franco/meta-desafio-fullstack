@@ -1,6 +1,7 @@
-export interface IProduto {
+export interface Produto {
   id: number;
   nome: string;
   preco: number;
   estoque: number;
+  urlImagem: string;
 }

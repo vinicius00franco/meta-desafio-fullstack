@@ -1,4 +1,4 @@
-export interface ICheckoutFormData {
+export interface DadosCheckout {
   produtoId: number;
   quantidade: number;
 }
