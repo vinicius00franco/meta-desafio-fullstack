@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import produtoReducer from './produtoSlice';
-import checkoutReducer from './checkoutSlice';
-import notificacaoReducer from './notificacaoSlice';
+import produtoReducer from '@/store/produtoSlice';
+import checkoutReducer from '@/store/checkoutSlice';
+import notificacaoReducer from '@/store/notificacaoSlice';
 
 export const store = configureStore({
   reducer: {

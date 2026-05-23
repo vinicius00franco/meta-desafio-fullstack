@@ -1,14 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-interface CheckoutState {
+interface ICheckoutState {
   processando: boolean;
   sucesso: boolean;
   erro: string | null;
   mensagem: string | null;
 }
 
-const estadoInicial: CheckoutState = {
+const estadoInicial: ICheckoutState = {
   processando: false,
   sucesso: false,
   erro: null,
