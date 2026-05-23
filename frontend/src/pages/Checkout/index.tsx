@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { buscarProdutos } from '@/store/produtoSlice';
 import type { IProduto, ItemCarrinho } from '@/types/IProduto';
@@ -18,7 +19,6 @@ export function Checkout() {
   const [mensagemErro, setMensagemErro] = useState<string>('');
   const [shakeSidebar, setShakeSidebar] = useState<boolean>(false);
   const [carrinhoAberto, setCarrinhoAberto] = useState<boolean>(false);
-  const [termoPesquisa, setTermoPesquisa] = useState<string>('');
   const observerRef = useRef<IntersectionObserver | null>(null);
   const carregarMaisRef = useRef<HTMLDivElement>(null);
 
@@ -125,13 +125,7 @@ export function Checkout() {
 
   const quantidadeTotalItens = carrinho.reduce((total, item) => total + item.quantidade, 0);
 
-  const handlePesquisar = (termo: string) => {
-    setTermoPesquisa(termo);
-  };
-
-  const produtosFiltrados = produtos.filter((produto) =>
-    produto.nome.toLowerCase().includes(termoPesquisa.toLowerCase())
-  );
+  const produtosFiltrados = produtos;
 
   if (carregandoProdutos) {
     return (
@@ -172,47 +166,51 @@ export function Checkout() {
   }
 
   return (
-    <div className="checkout">
-      <Cabecalho
-        aoAlternarCarrinho={handleAlternarCarrinho}
-        carrinhoAberto={carrinhoAberto}
-        quantidadeItens={quantidadeTotalItens}
-        aoPesquisar={handlePesquisar}
-      />
-
-      <div className="checkout__conteudo">
-        <ListaProdutos
-          produtos={produtosFiltrados}
-          aoAdicionarAoCarrinho={handleAdicionarAoCarrinho}
+    <>
+      <div className="checkout">
+        <Cabecalho
+          aoAlternarCarrinho={handleAlternarCarrinho}
+          carrinhoAberto={carrinhoAberto}
+          quantidadeItens={quantidadeTotalItens}
         />
-        {paginacao && paginacao.pagina < paginacao.totalPaginas && (
-          <div ref={carregarMaisRef} className="checkout__carregar-mais">
-            {carregandoMais && <p>Carregando mais produtos...</p>}
+
+        <div className="checkout__conteudo">
+          <ListaProdutos
+            produtos={produtosFiltrados}
+            aoAdicionarAoCarrinho={handleAdicionarAoCarrinho}
+          />
+          {paginacao && paginacao.pagina < paginacao.totalPaginas && (
+            <div ref={carregarMaisRef} className="checkout__carregar-mais">
+              {carregandoMais && <p>Carregando mais produtos...</p>}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {createPortal(
+        <>
+          <div 
+            className={`checkout__overlay ${carrinhoAberto ? 'checkout__overlay--visivel' : ''}`}
+            onClick={handleAlternarCarrinho}
+          />
+
+          <div className={`checkout__sidebar ${carrinhoAberto ? 'checkout__sidebar--aberto' : ''}`}>
+            <SidebarCheckout
+              carrinho={carrinho}
+              aoAlterarQuantidade={handleAlterarQuantidade}
+              aoRemoverDoCarrinho={handleRemoverDoCarrinho}
+              aoFinalizar={handleFinalizar}
+              aoNovaCompra={handleNovaCompra}
+              processando={estado === 'processando'}
+              estado={estado}
+              mensagemErro={mensagemErro}
+              shake={shakeSidebar}
+              aoFechar={handleAlternarCarrinho}
+            />
           </div>
-        )}
-      </div>
-
-      {carrinhoAberto && (
-        <div 
-          className="checkout__overlay checkout__overlay--visivel"
-          onClick={handleAlternarCarrinho}
-        />
+        </>,
+        document.body
       )}
-
-      <div className={`checkout__sidebar ${carrinhoAberto ? 'checkout__sidebar--aberto' : ''}`}>
-        <SidebarCheckout
-          carrinho={carrinho}
-          aoAlterarQuantidade={handleAlterarQuantidade}
-          aoRemoverDoCarrinho={handleRemoverDoCarrinho}
-          aoFinalizar={handleFinalizar}
-          aoNovaCompra={handleNovaCompra}
-          processando={estado === 'processando'}
-          estado={estado}
-          mensagemErro={mensagemErro}
-          shake={shakeSidebar}
-          aoFechar={handleAlternarCarrinho}
-        />
-      </div>
-    </div>
+    </>
   );
 }

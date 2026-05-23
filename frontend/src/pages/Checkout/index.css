@@ -2,6 +2,7 @@
   min-height: 100vh;
   background-color: #ffffff;
   padding: 24px;
+  position: relative;
 }
 
 .checkout__cabecalho {
@@ -25,9 +26,6 @@
 }
 
 .checkout__conteudo {
-  display: grid;
-  grid-template-columns: 1fr 400px;
-  gap: 32px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -52,9 +50,41 @@
 }
 
 .checkout__sidebar {
-  position: sticky;
-  top: 24px;
-  height: fit-content;
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 400px;
+  height: 100vh;
+  background: white;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+  transition: right 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.checkout__sidebar--aberto {
+  right: 0;
+}
+
+.checkout__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.checkout__overlay--visivel {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .checkout__loading {
@@ -105,11 +135,5 @@
 
   .checkout__grid-produtos {
     grid-template-columns: 1fr;
-  }
-
-  .checkout__sidebar {
-    position: sticky;
-    top: 16px;
-    z-index: 10;
   }
 }

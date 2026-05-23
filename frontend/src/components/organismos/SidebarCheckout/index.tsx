@@ -84,8 +84,9 @@ export function SidebarCheckout({
   }
 
   return (
-    <div className={`sidebar-checkout ${shake ? 'sidebar-checkout--shake' : ''} ${estado === 'processando' ? 'sidebar-checkout--processando' : ''}`} data-testid="sidebar-carrinho">
-      <div className="sidebar-checkout__cabecalho">
+    <div className={`sidebar-checkout ${estado === 'processando' ? 'sidebar-checkout--processando' : ''}`} data-testid="sidebar-carrinho">
+      <div className={`sidebar-checkout__conteudo ${shake ? 'sidebar-checkout__conteudo--shake' : ''}`}>
+        <div className="sidebar-checkout__cabecalho">
         <h2 className="sidebar-checkout__titulo">SEU CARRINHO</h2>
         <button className="sidebar-checkout__botao-fechar" onClick={aoFechar} aria-label="Fechar carrinho" data-testid="botao-fechar-carrinho">
           ✕
@@ -161,6 +162,7 @@ export function SidebarCheckout({
           )}
         </>
       )}
+      </div>
     </div>
   );
 }
