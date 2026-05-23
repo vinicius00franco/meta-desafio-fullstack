@@ -19,7 +19,24 @@ export async function processarCheckout(
   return response.data;
 }
 
+<<<<<<< Updated upstream
 export async function obterProdutos(): Promise<IProduto[]> {
   const response = await api.get<IProduto[]>('/produtos');
+=======
+interface RespostaProdutos {
+  produtos: Produto[];
+  paginacao: {
+    pagina: number;
+    limite: number;
+    total: number;
+    totalPaginas: number;
+  };
+}
+
+export async function obterProdutos(pagina: number = 1, limite: number = 10): Promise<RespostaProdutos> {
+  const response = await api.get<RespostaProdutos>('/produtos', {
+    params: { pagina, limite },
+  });
+>>>>>>> Stashed changes
   return response.data;
 }

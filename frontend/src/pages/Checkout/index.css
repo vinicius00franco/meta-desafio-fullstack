@@ -1,0 +1,149 @@
+.checkout {
+  min-height: 100vh;
+  background-color: #ffffff;
+  padding: 24px;
+  position: relative;
+}
+
+.checkout__cabecalho {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.checkout__logo {
+  font-size: 28px;
+  font-weight: 800;
+  color: #2563eb;
+  margin: 0;
+}
+
+.checkout__subtitulo {
+  font-size: 18px;
+  color: #64748b;
+  margin: 8px 0 0 0;
+}
+
+.checkout__conteudo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.checkout__produtos {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.checkout__titulo-secao {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.checkout__grid-produtos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.checkout__sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100vh;
+  background-color: #ffffff;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  overflow-y: auto;
+  visibility: hidden;
+}
+
+.checkout__sidebar--aberto {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.checkout__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.checkout__overlay--visivel {
+  opacity: 1;
+  visibility: visible;
+}
+
+.checkout__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  gap: 16px;
+}
+
+.checkout__carregar-mais {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+  color: #666;
+  font-size: 14px;
+}
+
+.checkout__spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.checkout__erro {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  .checkout__sidebar {
+    width: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .checkout {
+    padding: 16px;
+  }
+
+  .checkout__grid-produtos {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout__sidebar {
+    width: 85%;
+    max-width: 320px;
+  }
+}

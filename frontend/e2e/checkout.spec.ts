@@ -9,88 +9,203 @@ test.describe('Checkout E2E', () => {
 
   test.describe('Cenários de Sucesso', () => {
     test('deve processar compra com sucesso', async ({ page }) => {
-      await page.getByTestId('produto-select').selectOption(CENARIOS_CHECKOUT.SUCESSO.produto.id);
-      await page.getByTestId('quantidade-input').fill(CENARIOS_CHECKOUT.SUCESSO.quantidade.toString());
-      await page.getByTestId('botao-comprar').click();
+      const produtoId = CENARIOS_CHECKOUT.SUCESSO.produto.id;
+      const quantidade = CENARIOS_CHECKOUT.SUCESSO.quantidade;
 
-      await expect(page.getByTestId('toast-feedback')).toBeVisible();
-      await expect(page.locator('.toast-feedback__mensagem')).toContainText('Compra realizada com sucesso!');
+      await page.getByTestId(`card-produto-${produtoId}`).isVisible();
+      
+      for (let i = 0; i < quantidade; i++) {
+        await page.getByTestId(`botao-aumentar-quantidade-${produtoId}`).click();
+      }
+      
+      await page.getByTestId(`botao-adicionar-${produtoId}`).click();
+      
+      await page.getByTestId('botao-abrir-carrinho').click();
+      await expect(page.getByTestId('sidebar-carrinho')).toBeVisible();
+      await expect(page.getByTestId(`item-carrinho-${produtoId}`)).toBeVisible();
+      
+      await page.getByTestId('botao-finalizar-compra').click();
+      
+      await expect(page.getByTestId('sidebar-processando')).toBeVisible();
+      await expect(page.getByTestId('estado-processando')).toBeVisible();
+      
+      await page.waitForTimeout(3500);
+      
+      await expect(page.getByTestId('sidebar-sucesso')).toBeVisible();
+      await expect(page.getByTestId('estado-sucesso')).toBeVisible();
     });
 
     test('deve processar compra com estoque exato', async ({ page }) => {
-      await page.getByTestId('produto-select').selectOption(CENARIOS_CHECKOUT.ESTOQUE_EXATO.produto.id);
-      await page.getByTestId('quantidade-input').fill(CENARIOS_CHECKOUT.ESTOQUE_EXATO.quantidade.toString());
-      await page.getByTestId('botao-comprar').click();
+      const produtoId = CENARIOS_CHECKOUT.ESTOQUE_EXATO.produto.id;
+      const quantidade = CENARIOS_CHECKOUT.ESTOQUE_EXATO.quantidade;
 
-      await expect(page.getByTestId('toast-feedback')).toBeVisible();
-      await expect(page.locator('.toast-feedback__mensagem')).toContainText('Compra realizada com sucesso!');
+      for (let i = 0; i < quantidade; i++) {
+        await page.getByTestId(`botao-aumentar-quantidade-${produtoId}`).click();
+      }
+      
+      await page.getByTestId(`botao-adicionar-${produtoId}`).click();
+      
+      await page.getByTestId('botao-abrir-carrinho').click();
+      await page.getByTestId('botao-finalizar-compra').click();
+      
+      await page.waitForTimeout(3500);
+      
+      await expect(page.getByTestId('sidebar-sucesso')).toBeVisible();
     });
   });
 
   test.describe('Cenários de Validação', () => {
-    test('deve validar campo produto obrigatório', async ({ page }) => {
-      const botaoComprar = page.getByTestId('botao-comprar');
-      await expect(botaoComprar).toBeDisabled();
+    test('deve mostrar carrinho vazio inicialmente', async ({ page }) => {
+      await page.getByTestId('botao-abrir-carrinho').click();
+      await expect(page.getByTestId('sidebar-carrinho')).toBeVisible();
+      await expect(page.getByTestId('mensagem-carrinho-vazio')).toBeVisible();
+      await expect(page.getByTestId('botao-finalizar-compra')).not.toBeVisible();
     });
 
-    test('deve validar quantidade maior que zero', async ({ page }) => {
-      await page.getByTestId('produto-select').selectOption(CENARIOS_CHECKOUT.SUCESSO.produto.id);
-      await page.getByTestId('quantidade-input').fill(CENARIOS_CHECKOUT.QUANTIDADE_ZERO.quantidade.toString());
+    test('deve adicionar produto ao carrinho', async ({ page }) => {
+      const produtoId = CENARIOS_CHECKOUT.SUCESSO.produto.id;
       
-      const botaoComprar = page.getByTestId('botao-comprar');
-      await expect(botaoComprar).toBeDisabled();
-    });
-
-    test('deve validar quantidade máxima', async ({ page }) => {
-      await page.getByTestId('produto-select').selectOption(CENARIOS_CHECKOUT.SUCESSO.produto.id);
-      await page.getByTestId('quantidade-input').fill(CENARIOS_CHECKOUT.QUANTIDADE_MAXIMA_EXCEDIDA.quantidade.toString());
+      await page.getByTestId(`botao-adicionar-${produtoId}`).click();
       
-      const botaoComprar = page.getByTestId('botao-comprar');
-      await expect(botaoComprar).toBeDisabled();
+      await page.getByTestId('botao-abrir-carrinho').click();
+      await expect(page.getByTestId(`item-carrinho-${produtoId}`)).toBeVisible();
+      await expect(page.getByTestId('badge-quantidade-itens')).toHaveText('1');
     });
 
-    test('deve desabilitar botão quando formulário inválido', async ({ page }) => {
-      const botaoComprar = page.getByTestId('botao-comprar');
-      await expect(botaoComprar).toBeDisabled();
+    test('deve aumentar quantidade de item no carrinho', async ({ page }) => {
+      const produtoId = CENARIOS_CHECKOUT.SUCESSO.produto.id;
+      
+      await page.getByTestId(`botao-adicionar-${produtoId}`).click();
+      await page.getByTestId('botao-abrir-carrinho').click();
+      
+      await page.getByTestId(`botao-aumentar-item-${produtoId}`).click();
+      await expect(page.getByTestId(`quantidade-item-${produtoId}`)).toHaveText('2');
+      await expect(page.getByTestId('badge-quantidade-itens')).toHaveText('2');
     });
 
-    test('deve habilitar botão quando formulário válido', async ({ page }) => {
-      await page.getByTestId('produto-select').selectOption(CENARIOS_CHECKOUT.SUCESSO.produto.id);
-      await page.getByTestId('quantidade-input').fill('1');
+    test('deve diminuir quantidade de item no carrinho', async ({ page }) => {
+      const produtoId = CENARIOS_CHECKOUT.SUCESSO.produto.id;
+      
+      await page.getByTestId(`botao-aumentar-quantidade-${produtoId}`).click();
+      await page.getByTestId(`botao-aumentar-quantidade-${produtoId}`).click();
+      await page.getByTestId(`botao-adicionar-${produtoId}`).click();
+      
+      await page.getByTestId('botao-abrir-carrinho').click();
+      await page.getByTestId(`botao-diminuir-item-${produtoId}`).click();
+      
+      await expect(page.getByTestId(`quantidade-item-${produtoId}`)).toHaveText('1');
+    });
 
-      const botaoComprar = page.getByTestId('botao-comprar');
-      await expect(botaoComprar).toBeEnabled();
+    test('deve remover item do carrinho', async ({ page }) => {
+      const produtoId = CENARIOS_CHECKOUT.SUCESSO.produto.id;
+      
+      await page.getByTestId(`botao-adicionar-${produtoId}`).click();
+      await page.getByTestId('botao-abrir-carrinho').click();
+      
+      await page.getByTestId(`botao-remover-item-${produtoId}`).click();
+      
+      await expect(page.getByTestId(`item-carrinho-${produtoId}`)).not.toBeVisible();
+      await expect(page.getByTestId('mensagem-carrinho-vazio')).toBeVisible();
+    });
+
+    test('deve fechar carrinho ao clicar no botão fechar', async ({ page }) => {
+      await page.getByTestId('botao-abrir-carrinho').click();
+      await expect(page.getByTestId('sidebar-carrinho')).toBeVisible();
+      
+      await page.getByTestId('botao-fechar-carrinho').click();
+      await expect(page.getByTestId('sidebar-carrinho')).not.toBeVisible();
     });
   });
 
   test.describe('Cenários de Falha', () => {
     test('deve exibir erro quando estoque insuficiente', async ({ page }) => {
-      await page.getByTestId('produto-select').selectOption(CENARIOS_CHECKOUT.ESTOQUE_INSUFICIENTE.produto.id);
-      await page.getByTestId('quantidade-input').fill(CENARIOS_CHECKOUT.ESTOQUE_INSUFICIENTE.quantidade.toString());
-      await page.getByTestId('botao-comprar').click();
+      const produtoId = CENARIOS_CHECKOUT.ESTOQUE_INSUFICIENTE.produto.id;
+      const quantidade = CENARIOS_CHECKOUT.ESTOQUE_INSUFICIENTE.quantidade;
 
-      await expect(page.getByTestId('toast-feedback')).toBeVisible();
-      await expect(page.locator('.toast-feedback__mensagem')).toContainText('Estoque insuficiente');
+      for (let i = 0; i < quantidade; i++) {
+        await page.getByTestId(`botao-aumentar-quantidade-${produtoId}`).click();
+      }
+      
+      await page.getByTestId(`botao-adicionar-${produtoId}`).click();
+      await page.getByTestId('botao-abrir-carrinho').click();
+      await page.getByTestId('botao-finalizar-compra').click();
+      
+      await page.waitForTimeout(3500);
+      
+      await expect(page.getByTestId('sidebar-erro')).toBeVisible();
+      await expect(page.getByTestId('estado-erro')).toBeVisible();
+      await expect(page.getByTestId('mensagem-erro')).toContainText('Estoque insuficiente');
+    });
+
+    test('deve tentar novamente após erro', async ({ page }) => {
+      const produtoId = CENARIOS_CHECKOUT.ESTOQUE_INSUFICIENTE.produto.id;
+      const quantidade = CENARIOS_CHECKOUT.ESTOQUE_INSUFICIENTE.quantidade;
+
+      for (let i = 0; i < quantidade; i++) {
+        await page.getByTestId(`botao-aumentar-quantidade-${produtoId}`).click();
+      }
+      
+      await page.getByTestId(`botao-adicionar-${produtoId}`).click();
+      await page.getByTestId('botao-abrir-carrinho').click();
+      await page.getByTestId('botao-finalizar-compra').click();
+      
+      await page.waitForTimeout(3500);
+      
+      await expect(page.getByTestId('sidebar-erro')).toBeVisible();
+      
+      await page.getByTestId(`botao-remover-item-${produtoId}`).click();
+      await page.getByTestId('botao-fechar-carrinho').click();
+      
+      const produtoSucessoId = CENARIOS_CHECKOUT.SUCESSO.produto.id;
+      await page.getByTestId(`botao-adicionar-${produtoSucessoId}`).click();
+      await page.getByTestId('botao-abrir-carrinho').click();
+      await page.getByTestId('botao-finalizar-compra').click();
+      
+      await page.waitForTimeout(3500);
+      
+      await expect(page.getByTestId('sidebar-sucesso')).toBeVisible();
     });
   });
 
   test.describe('Interação com UI', () => {
-    test('deve mostrar resumo do pedido quando produto selecionado', async ({ page }) => {
-      await page.getByTestId('produto-select').selectOption(CENARIOS_CHECKOUT.SUCESSO.produto.id);
-      await page.getByTestId('quantidade-input').fill(CENARIOS_CHECKOUT.SUCESSO.quantidade.toString());
-
-      await expect(page.getByText('Preço unitário:')).toBeVisible();
-      await expect(page.getByText('Valor total:')).toBeVisible();
+    test('deve mostrar lista de produtos', async ({ page }) => {
+      await expect(page.getByTestId('lista-produtos')).toBeVisible();
+      await expect(page.getByTestId('grid-produtos')).toBeVisible();
     });
 
+    test('deve mostrar cabecalho com barra de pesquisa', async ({ page }) => {
+      await expect(page.getByTestId('cabecalho')).toBeVisible();
+      await expect(page.getByTestId('input-pesquisa')).toBeVisible();
+      await expect(page.getByTestId('botao-abrir-carrinho')).toBeVisible();
+    });
 
-    test('deve fechar toast ao clicar no botão fechar', async ({ page }) => {
-      await page.getByTestId('produto-select').selectOption(CENARIOS_CHECKOUT.SUCESSO.produto.id);
-      await page.getByTestId('quantidade-input').fill('1');
-      await page.getByTestId('botao-comprar').click();
+    test('deve mostrar quantidade no badge do carrinho', async ({ page }) => {
+      const produtoId = CENARIOS_CHECKOUT.SUCESSO.produto.id;
+      
+      await page.getByTestId(`botao-adicionar-${produtoId}`).click();
+      
+      await expect(page.getByTestId('badge-quantidade-itens')).toHaveText('1');
+    });
 
-      await page.getByTestId('toast-fechar').click();
-      await expect(page.getByTestId('toast-feedback')).not.toBeVisible();
+    test('deve iniciar nova compra após sucesso', async ({ page }) => {
+      const produtoId = CENARIOS_CHECKOUT.SUCESSO.produto.id;
+      
+      await page.getByTestId(`botao-adicionar-${produtoId}`).click();
+      await page.getByTestId('botao-abrir-carrinho').click();
+      await page.getByTestId('botao-finalizar-compra').click();
+      
+      await page.waitForTimeout(3500);
+      
+      await expect(page.getByTestId('sidebar-sucesso')).toBeVisible();
+      await page.getByTestId('botao-nova-compra').click();
+      
+      await expect(page.getByTestId('sidebar-carrinho')).toBeVisible();
+      await expect(page.getByTestId('mensagem-carrinho-vazio')).toBeVisible();
+    });
+
+    test('deve mostrar estado de carregamento inicial', async ({ page }) => {
+      await page.reload();
+      await expect(page.getByTestId('estado-carregando')).toBeVisible();
     });
   });
 });

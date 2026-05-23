@@ -4,3 +4,8 @@ export interface IProduto {
   preco: number;
   estoque: number;
 }
+
+export interface ItemCarrinho {
+  produto: Produto;
+  quantidade: number;
+}
