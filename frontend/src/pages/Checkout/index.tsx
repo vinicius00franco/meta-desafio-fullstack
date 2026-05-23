@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { useAppSelector } from '@/store/hooks';
-import type { Produto } from '@/types/IProduto';
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { buscarProdutos } from '@/store/produtoSlice';
+import type { IProduto, ItemCarrinho } from '@/types/IProduto';
 import { SidebarCheckout } from '@/components/organismos/SidebarCheckout';
 import { Cabecalho } from '@/components/organismos/Cabecalho';
 import { ListaProdutos } from '@/components/organismos/ListaProdutos';
@@ -10,31 +11,82 @@ import './index.css';
 type EstadoCheckout = 'inicial' | 'processando' | 'sucesso' | 'erro';
 
 export function Checkout() {
-  const { produtos, carregando: carregandoProdutos, erro: erroCarregarProdutos } = useAppSelector((state) => state.produtos);
-  const [produtoId, setProdutoId] = useState<number>(0);
-  const [quantidade, setQuantidade] = useState<number>(1);
+  const dispatch = useAppDispatch();
+  const { produtos, carregando: carregandoProdutos, erro: erroCarregarProdutos, paginacao, carregandoMais } = useAppSelector((state) => state.produtos);
+  const [carrinho, setCarrinho] = useState<ItemCarrinho[]>([]);
   const [estado, setEstado] = useState<EstadoCheckout>('inicial');
   const [mensagemErro, setMensagemErro] = useState<string>('');
   const [shakeSidebar, setShakeSidebar] = useState<boolean>(false);
-  const [carrinhoAberto, setCarrinhoAberto] = useState<boolean>(true);
+  const [carrinhoAberto, setCarrinhoAberto] = useState<boolean>(false);
+  const [termoPesquisa, setTermoPesquisa] = useState<string>('');
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const carregarMaisRef = useRef<HTMLDivElement>(null);
 
-  const produtoSelecionado = produtos.find((p: Produto) => p.id === produtoId);
+  useEffect(() => {
+    dispatch(buscarProdutos({ pagina: 1, limite: 10 }));
+  }, [dispatch]);
 
-  const handleSelecionarProduto = (id: number) => {
-    setProdutoId(id);
-    setQuantidade(1);
+  const carregarMais = useCallback(() => {
+    if (paginacao && paginacao.pagina < paginacao.totalPaginas && !carregandoMais) {
+      dispatch(buscarProdutos({ pagina: paginacao.pagina + 1, limite: 10 }));
+    }
+  }, [dispatch, paginacao, carregandoMais]);
+
+  useEffect(() => {
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          carregarMais();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (carregarMaisRef.current) {
+      observerRef.current.observe(carregarMaisRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [carregarMais]);
+
+  const handleAdicionarAoCarrinho = (produto: IProduto, quantidade: number) => {
+    setCarrinho((anterior) => {
+      const itemExistente = anterior.find((item) => item.produto.id === produto.id);
+      if (itemExistente) {
+        return anterior.map((item) =>
+          item.produto.id === produto.id
+            ? { ...item, quantidade: item.quantidade + quantidade }
+            : item
+        );
+      }
+      return [...anterior, { produto, quantidade }];
+    });
     setEstado('inicial');
     setMensagemErro('');
   };
 
-  const handleAlterarQuantidade = (novaQuantidade: number) => {
-    setQuantidade(novaQuantidade);
+  const handleAlterarQuantidade = (produtoId: number, novaQuantidade: number) => {
+    if (novaQuantidade === 0) {
+      setCarrinho((anterior) => anterior.filter((item) => item.produto.id !== produtoId));
+    } else {
+      setCarrinho((anterior) =>
+        anterior.map((item) =>
+          item.produto.id === produtoId ? { ...item, quantidade: novaQuantidade } : item
+        )
+      );
+    }
   };
 
-  const handleAlterarQuantidadeNoCard = (idProduto: number, novaQuantidade: number) => {
-    if (idProduto === produtoId) {
-      setQuantidade(novaQuantidade);
-    }
+  const handleRemoverDoCarrinho = (produtoId: number) => {
+    setCarrinho((anterior) => anterior.filter((item) => item.produto.id !== produtoId));
   };
 
   const handleAlternarCarrinho = () => {
@@ -42,7 +94,7 @@ export function Checkout() {
   };
 
   const handleFinalizar = async () => {
-    if (!produtoSelecionado) {
+    if (carrinho.length === 0) {
       setShakeSidebar(true);
       setTimeout(() => setShakeSidebar(false), 500);
       return;
@@ -51,9 +103,14 @@ export function Checkout() {
     setEstado('processando');
 
     setTimeout(() => {
-      if (quantidade > produtoSelecionado.estoque) {
+      const estoqueInsuficiente = carrinho.find(
+        (item) => item.quantidade > item.produto.estoque
+      );
+      if (estoqueInsuficiente) {
         setEstado('erro');
-        setMensagemErro(`Estoque insuficiente. Disponível: ${produtoSelecionado.estoque} unidades`);
+        setMensagemErro(
+          `Estoque insuficiente para ${estoqueInsuficiente.produto.nome}. Disponível: ${estoqueInsuficiente.produto.estoque} unidades`
+        );
       } else {
         setEstado('sucesso');
       }
@@ -61,11 +118,20 @@ export function Checkout() {
   };
 
   const handleNovaCompra = () => {
-    setProdutoId(0);
-    setQuantidade(1);
+    setCarrinho([]);
     setEstado('inicial');
     setMensagemErro('');
   };
+
+  const quantidadeTotalItens = carrinho.reduce((total, item) => total + item.quantidade, 0);
+
+  const handlePesquisar = (termo: string) => {
+    setTermoPesquisa(termo);
+  };
+
+  const produtosFiltrados = produtos.filter((produto) =>
+    produto.nome.toLowerCase().includes(termoPesquisa.toLowerCase())
+  );
 
   if (carregandoProdutos) {
     return (
@@ -73,7 +139,7 @@ export function Checkout() {
         <Cabecalho
           aoAlternarCarrinho={handleAlternarCarrinho}
           carrinhoAberto={carrinhoAberto}
-          quantidadeItens={quantidade}
+          quantidadeItens={quantidadeTotalItens}
         />
         <div className="checkout__conteudo">
           <EstadoCarregando />
@@ -110,33 +176,42 @@ export function Checkout() {
       <Cabecalho
         aoAlternarCarrinho={handleAlternarCarrinho}
         carrinhoAberto={carrinhoAberto}
-        quantidadeItens={quantidade}
+        quantidadeItens={quantidadeTotalItens}
+        aoPesquisar={handlePesquisar}
       />
 
       <div className="checkout__conteudo">
         <ListaProdutos
-          produtos={produtos}
-          produtoId={produtoId}
-          quantidade={quantidade}
-          aoSelecionar={handleSelecionarProduto}
-          aoAlterarQuantidade={handleAlterarQuantidadeNoCard}
+          produtos={produtosFiltrados}
+          aoAdicionarAoCarrinho={handleAdicionarAoCarrinho}
         />
-
-        {carrinhoAberto && (
-          <div className="checkout__sidebar">
-            <SidebarCheckout
-              produtoSelecionado={produtoSelecionado || null}
-              quantidade={quantidade}
-              aoAlterarQuantidade={handleAlterarQuantidade}
-              aoFinalizar={handleFinalizar}
-              aoNovaCompra={handleNovaCompra}
-              processando={estado === 'processando'}
-              estado={estado}
-              mensagemErro={mensagemErro}
-              shake={shakeSidebar}
-            />
+        {paginacao && paginacao.pagina < paginacao.totalPaginas && (
+          <div ref={carregarMaisRef} className="checkout__carregar-mais">
+            {carregandoMais && <p>Carregando mais produtos...</p>}
           </div>
         )}
+      </div>
+
+      {carrinhoAberto && (
+        <div 
+          className="checkout__overlay checkout__overlay--visivel"
+          onClick={handleAlternarCarrinho}
+        />
+      )}
+
+      <div className={`checkout__sidebar ${carrinhoAberto ? 'checkout__sidebar--aberto' : ''}`}>
+        <SidebarCheckout
+          carrinho={carrinho}
+          aoAlterarQuantidade={handleAlterarQuantidade}
+          aoRemoverDoCarrinho={handleRemoverDoCarrinho}
+          aoFinalizar={handleFinalizar}
+          aoNovaCompra={handleNovaCompra}
+          processando={estado === 'processando'}
+          estado={estado}
+          mensagemErro={mensagemErro}
+          shake={shakeSidebar}
+          aoFechar={handleAlternarCarrinho}
+        />
       </div>
     </div>
   );

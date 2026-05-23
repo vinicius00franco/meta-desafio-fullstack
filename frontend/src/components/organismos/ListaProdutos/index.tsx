@@ -1,21 +1,15 @@
-import type { Produto } from '@/types/IProduto';
+import type { IProduto } from '@/types/IProduto';
 import { CardProduto } from '@/components/moleculas/CardProduto';
 import './index.css';
 
 interface IListaProdutosProps {
-  produtos: Produto[];
-  produtoId: number;
-  quantidade: number;
-  aoSelecionar: (id: number) => void;
-  aoAlterarQuantidade: (id: number, quantidade: number) => void;
+  produtos: IProduto[];
+  aoAdicionarAoCarrinho: (produto: IProduto, quantidade: number) => void;
 }
 
 export function ListaProdutos({ 
   produtos, 
-  produtoId, 
-  quantidade, 
-  aoSelecionar, 
-  aoAlterarQuantidade 
+  aoAdicionarAoCarrinho 
 }: IListaProdutosProps) {
   return (
     <div className="lista-produtos">
@@ -25,10 +19,7 @@ export function ListaProdutos({
           <CardProduto
             key={produto.id}
             produto={produto}
-            selecionado={produto.id === produtoId}
-            aoSelecionar={aoSelecionar}
-            quantidadeSelecionada={produto.id === produtoId ? quantidade : 1}
-            aoAlterarQuantidade={aoAlterarQuantidade}
+            aoAdicionarAoCarrinho={aoAdicionarAoCarrinho}
           />
         ))}
       </div>
