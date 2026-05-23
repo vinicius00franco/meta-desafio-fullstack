@@ -1,0 +1,32 @@
+.info-carrinho__campo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.info-carrinho__campo--total {
+  border-bottom: none;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 2px solid #2563eb;
+}
+
+.info-carrinho__label {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.info-carrinho__valor {
+  font-size: 14px;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.info-carrinho__valor--destaque {
+  font-size: 18px;
+  color: #2563eb;
+  font-weight: 700;
+}

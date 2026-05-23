@@ -1,0 +1,17 @@
+.lista-produtos {
+  flex: 1;
+  padding: 16px;
+}
+
+.lista-produtos__titulo {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 16px 0;
+}
+
+.lista-produtos__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
