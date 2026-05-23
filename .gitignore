@@ -24,6 +24,7 @@ lerna-debug.log*
 .idea/
 .cursor/
 .cursorrules
+.cursorhooks.json
 .claude/
 .gemini/
 .windsurf/
@@ -55,3 +56,6 @@ coverage/
 *.swp
 *.swo
 *~
+
+# Arquivos de configuração de exemplo
+.env.example
