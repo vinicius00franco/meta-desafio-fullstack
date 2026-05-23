@@ -1,0 +1,44 @@
+:root {
+  /* Cores */
+  --cor-primaria: #2563eb;
+  --cor-primaria-hover: #1d4ed8;
+  --cor-sucesso: #22c55e;
+  --cor-erro: #ef4444;
+  --cor-aviso: #f59e0b;
+  --cor-texto: #1f2937;
+  --cor-texto-secundario: #6b7280;
+  --cor-fundo: #ffffff;
+  --cor-fundo-secundario: #f3f4f6;
+  --cor-borda: #d1d5db;
+  --cor-borda-foco: #2563eb;
+
+  /* Espaçamentos */
+  --espacamento-xs: 0.25rem;
+  --espacamento-sm: 0.5rem;
+  --espacamento-md: 1rem;
+  --espacamento-lg: 1.5rem;
+  --espacamento-xl: 2rem;
+  --espacamento-2xl: 3rem;
+
+  /* Border Radius */
+  --border-radius-sm: 0.25rem;
+  --border-radius-md: 0.375rem;
+  --border-radius-lg: 0.5rem;
+
+  /* Fontes */
+  --fonte-tamanho-xs: 0.75rem;
+  --fonte-tamanho-sm: 0.875rem;
+  --fonte-tamanho-base: 1rem;
+  --fonte-tamanho-lg: 1.125rem;
+  --fonte-tamanho-xl: 1.25rem;
+  --fonte-tamanho-2xl: 1.5rem;
+
+  /* Sombras */
+  --sombra-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --sombra-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --sombra-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+  /* Transições */
+  --transicao-rapida: 150ms ease-in-out;
+  --transicao-normal: 300ms ease-in-out;
+}

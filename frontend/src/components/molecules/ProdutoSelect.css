@@ -1,0 +1,33 @@
+.campo-produto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacamento-sm);
+}
+
+.campo-produto__label {
+  font-size: var(--fonte-tamanho-sm);
+  font-weight: 600;
+  color: var(--cor-texto);
+}
+
+.campo-produto__select {
+  padding: var(--espacamento-md);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--border-radius-md);
+  font-size: var(--fonte-tamanho-base);
+  background-color: var(--cor-fundo);
+  transition: border-color var(--transicao-rapida);
+}
+
+.campo-produto__select:focus {
+  border-color: var(--cor-borda-foco);
+}
+
+.campo-produto__select--erro {
+  border-color: var(--cor-erro);
+}
+
+.campo-produto__erro {
+  font-size: var(--fonte-tamanho-xs);
+  color: var(--cor-erro);
+}
