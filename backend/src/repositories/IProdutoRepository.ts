@@ -1,6 +1,7 @@
 import { IProduto } from '../models/IProduto';
 
 export interface IProdutoRepository {
-  obterPorId(id: string): IProduto | undefined;
-  atualizarEstoque(id: string, novaQuantidade: number): void;
+  obterPorId(id: number): IProduto | undefined;
+  obterTodos(): IProduto[];
+  atualizarEstoque(id: number, novaQuantidade: number): void;
 }

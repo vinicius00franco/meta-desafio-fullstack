@@ -1,6 +1,7 @@
 import axios from 'axios';
 import type { ICheckoutResponse } from '../types/IApiResponse';
 import type { ICheckoutFormData } from '../types/ICheckoutFormData';
+import type { IProduto } from '../types/IProduto';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -18,7 +19,7 @@ export async function processarCheckout(
   return response.data;
 }
 
-export async function obterProdutos(): Promise<ICheckoutResponse[]> {
-  const response = await api.get<ICheckoutResponse[]>('/produtos');
+export async function obterProdutos(): Promise<IProduto[]> {
+  const response = await api.get<IProduto[]>('/produtos');
   return response.data;
 }

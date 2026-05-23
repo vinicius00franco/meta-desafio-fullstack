@@ -18,10 +18,10 @@ export function useCheckout() {
         dados: response,
       });
       return response;
-    } catch (erro) {
-      const erroResponse = erro as { response?: { data: { mensagem: string; estoqueDisponivel?: number } } };
-      const mensagem = erroResponse.response?.data?.mensagem || 'Erro ao processar compra';
-      const estoqueDisponivel = erroResponse.response?.data?.estoqueDisponivel;
+    } catch (erro: any) {
+      console.error('Erro no checkout:', erro);
+      const mensagem = erro.response?.data?.mensagem || erro.message || 'Erro ao processar compra';
+      const estoqueDisponivel = erro.response?.data?.estoqueDisponivel;
       
       setResult({
         sucesso: false,

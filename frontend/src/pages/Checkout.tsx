@@ -1,76 +1,32 @@
 import { useState } from 'react';
-import type { IProduto } from '../types/IProduto';
 import type { ICheckoutFormData } from '../types/ICheckoutFormData';
 import { useCheckout } from '../hooks/useCheckout';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { adicionarNotificacao } from '../store/notificacaoSlice';
 import { ProdutoSelect } from '../components/molecules/ProdutoSelect';
 import { QuantidadeInput } from '../components/molecules/QuantidadeInput';
 import { BotaoCompra } from '../components/molecules/BotaoCompra';
-import { ToastFeedback } from '../components/molecules/ToastFeedback';
 import './Checkout.css';
 
-const PRODUTOS_MOCK: IProduto[] = [
-  {
-    id: 'prod-1',
-    nome: 'Capinha iPhone 15',
-    preco: 49.90,
-    estoque: 10,
-  },
-  {
-    id: 'prod-2',
-    nome: 'Capinha Samsung S24',
-    preco: 39.90,
-    estoque: 5,
-  },
-  {
-    id: 'prod-3',
-    nome: 'Capinha iPhone 14',
-    preco: 44.90,
-    estoque: 3,
-  },
-  {
-    id: 'prod-4',
-    nome: 'Capinha iPhone 13',
-    preco: 34.90,
-    estoque: 10,
-  },
-  {
-    id: 'prod-5',
-    nome: 'Capinha iPhone 10',
-    preco: 19.90,
-    estoque: 10,
-  },
-  {
-    id: 'prod-6',
-    nome: 'Capinha iPhone 12',
-    preco: 29.90,
-    estoque: 10,
-  },
-  {
-    id: 'prod-7',
-    nome: 'Capinha iPhone 11',
-    preco: 24.90,
-    estoque: 100,
-  },
-];
-
 export function Checkout() {
+  const dispatch = useAppDispatch();
+  const { produtos, carregando: carregandoProdutos, erro: erroCarregarProdutos } = useAppSelector((state) => state.produtos);
   const [formData, setFormData] = useState<ICheckoutFormData>({
-    produtoId: '',
+    produtoId: 0,
     quantidade: 1,
   });
   const [erros, setErros] = useState<{ produtoId?: string; quantidade?: string }>({});
-  const [mostrarToast, setMostrarToast] = useState(false);
 
-  const { isLoading, result, executarCheckout, limparResultado } = useCheckout();
+  const { isLoading, executarCheckout } = useCheckout();
 
   const validarFormulario = (): boolean => {
     const novosErros: { produtoId?: string; quantidade?: string } = {};
 
-    if (!formData.produtoId) {
+    if (formData.produtoId === 0) {
       novosErros.produtoId = 'Selecione um produto';
     }
 
-    if (formData.quantidade < 1) {
+    if (formData.quantidade <= 0) {
       novosErros.quantidade = 'Quantidade deve ser maior que zero';
     }
 
@@ -89,13 +45,20 @@ export function Checkout() {
 
     try {
       await executarCheckout(formData);
-      setMostrarToast(true);
-    } catch (erro) {
-      setMostrarToast(true);
+      dispatch(adicionarNotificacao({
+        mensagem: 'Compra realizada com sucesso!',
+        tipo: 'sucesso',
+      }));
+    } catch (erro: any) {
+      const mensagemErro = erro.response?.data?.mensagem || erro.message || 'Erro ao processar compra';
+      dispatch(adicionarNotificacao({
+        mensagem: mensagemErro,
+        tipo: 'erro',
+      }));
     }
   };
 
-  const handleProdutoChange = (valor: string) => {
+  const handleProdutoChange = (valor: number) => {
     setFormData({ ...formData, produtoId: valor });
     setErros({ ...erros, produtoId: undefined });
   };
@@ -105,30 +68,37 @@ export function Checkout() {
     setErros({ ...erros, quantidade: undefined });
   };
 
-  const handleFecharToast = () => {
-    setMostrarToast(false);
-    limparResultado();
-  };
-
-  const produtoSelecionado = PRODUTOS_MOCK.find((p) => p.id === formData.produtoId);
+  const produtoSelecionado = produtos.find((p) => p.id === formData.produtoId);
   const valorTotal = produtoSelecionado ? produtoSelecionado.preco * formData.quantidade : 0;
+
+  if (carregandoProdutos) {
+    return (
+      <div className="checkout">
+        <div className="checkout__container">
+          <p>Carregando produtos...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (erroCarregarProdutos) {
+    return (
+      <div className="checkout">
+        <div className="checkout__container">
+          <p className="checkout__erro">{erroCarregarProdutos}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="checkout">
       <div className="checkout__container">
         <h1 className="checkout__titulo">Checkout</h1>
-        
-        {mostrarToast && result && (
-          <ToastFeedback
-            mensagem={result.sucesso ? 'Compra realizada com sucesso!' : result.erro}
-            tipo={result.sucesso ? 'sucesso' : 'erro'}
-            onClose={handleFecharToast}
-          />
-        )}
 
         <form className="checkout__form" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
           <ProdutoSelect
-            produtos={PRODUTOS_MOCK}
+            produtos={produtos}
             valor={formData.produtoId}
             onChange={handleProdutoChange}
             erro={erros.produtoId}
@@ -156,7 +126,7 @@ export function Checkout() {
 
           <BotaoCompra
             onClick={handleSubmit}
-            disabled={!formData.produtoId || formData.quantidade < 1}
+            disabled={formData.produtoId === 0 || formData.quantidade < 1 || formData.quantidade > 10}
             isLoading={isLoading}
           />
         </form>

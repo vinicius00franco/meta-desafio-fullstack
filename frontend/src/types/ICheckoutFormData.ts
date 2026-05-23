@@ -1,4 +1,4 @@
 export interface ICheckoutFormData {
-  produtoId: string;
+  produtoId: number;
   quantidade: number;
 }

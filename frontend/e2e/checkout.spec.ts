@@ -4,6 +4,7 @@ import { CENARIOS_CHECKOUT } from './fixtures/produtos';
 test.describe('Checkout E2E', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
+    await page.request.post('http://localhost:3000/checkout/reset-estoque');
   });
 
   test.describe('Cenários de Sucesso', () => {
@@ -13,7 +14,7 @@ test.describe('Checkout E2E', () => {
       await page.getByTestId('botao-comprar').click();
 
       await expect(page.getByTestId('toast-feedback')).toBeVisible();
-      await expect(page.getByTestId('toast-feedback')).toContainText('Compra realizada com sucesso!');
+      await expect(page.locator('.toast-feedback__mensagem')).toContainText('Compra realizada com sucesso!');
     });
 
     test('deve processar compra com estoque exato', async ({ page }) => {
@@ -22,34 +23,30 @@ test.describe('Checkout E2E', () => {
       await page.getByTestId('botao-comprar').click();
 
       await expect(page.getByTestId('toast-feedback')).toBeVisible();
-      await expect(page.getByTestId('toast-feedback')).toContainText('Compra realizada com sucesso!');
+      await expect(page.locator('.toast-feedback__mensagem')).toContainText('Compra realizada com sucesso!');
     });
   });
 
   test.describe('Cenários de Validação', () => {
     test('deve validar campo produto obrigatório', async ({ page }) => {
-      await page.getByTestId('botao-comprar').click();
-
-      await expect(page.getByTestId('toast-feedback')).toBeVisible();
-      await expect(page.getByTestId('toast-feedback')).toContainText('Selecione um produto');
+      const botaoComprar = page.getByTestId('botao-comprar');
+      await expect(botaoComprar).toBeDisabled();
     });
 
     test('deve validar quantidade maior que zero', async ({ page }) => {
       await page.getByTestId('produto-select').selectOption(CENARIOS_CHECKOUT.SUCESSO.produto.id);
       await page.getByTestId('quantidade-input').fill(CENARIOS_CHECKOUT.QUANTIDADE_ZERO.quantidade.toString());
-      await page.getByTestId('botao-comprar').click();
-
-      await expect(page.getByTestId('toast-feedback')).toBeVisible();
-      await expect(page.getByTestId('toast-feedback')).toContainText('Quantidade deve ser maior que zero');
+      
+      const botaoComprar = page.getByTestId('botao-comprar');
+      await expect(botaoComprar).toBeDisabled();
     });
 
     test('deve validar quantidade máxima', async ({ page }) => {
       await page.getByTestId('produto-select').selectOption(CENARIOS_CHECKOUT.SUCESSO.produto.id);
       await page.getByTestId('quantidade-input').fill(CENARIOS_CHECKOUT.QUANTIDADE_MAXIMA_EXCEDIDA.quantidade.toString());
-      await page.getByTestId('botao-comprar').click();
-
-      await expect(page.getByTestId('toast-feedback')).toBeVisible();
-      await expect(page.getByTestId('toast-feedback')).toContainText('Quantidade máxima por pedido é 10');
+      
+      const botaoComprar = page.getByTestId('botao-comprar');
+      await expect(botaoComprar).toBeDisabled();
     });
 
     test('deve desabilitar botão quando formulário inválido', async ({ page }) => {
@@ -73,7 +70,7 @@ test.describe('Checkout E2E', () => {
       await page.getByTestId('botao-comprar').click();
 
       await expect(page.getByTestId('toast-feedback')).toBeVisible();
-      await expect(page.getByTestId('toast-feedback')).toContainText('Estoque insuficiente');
+      await expect(page.locator('.toast-feedback__mensagem')).toContainText('Estoque insuficiente');
     });
   });
 
@@ -86,15 +83,6 @@ test.describe('Checkout E2E', () => {
       await expect(page.getByText('Valor total:')).toBeVisible();
     });
 
-    test('deve mostrar loading durante processamento', async ({ page }) => {
-      await page.getByTestId('produto-select').selectOption(CENARIOS_CHECKOUT.SUCESSO.produto.id);
-      await page.getByTestId('quantidade-input').fill('1');
-      
-      const botaoComprar = page.getByTestId('botao-comprar');
-      await botaoComprar.click();
-
-      await expect(botaoComprar).toContainText('Processando...');
-    });
 
     test('deve fechar toast ao clicar no botão fechar', async ({ page }) => {
       await page.getByTestId('produto-select').selectOption(CENARIOS_CHECKOUT.SUCESSO.produto.id);

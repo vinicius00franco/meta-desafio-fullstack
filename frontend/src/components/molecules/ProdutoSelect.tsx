@@ -3,8 +3,8 @@ import './ProdutoSelect.css';
 
 interface IProdutoSelectProps {
   produtos: IProduto[];
-  valor: string;
-  onChange: (valor: string) => void;
+  valor: number;
+  onChange: (valor: number) => void;
   erro?: string;
 }
 
@@ -18,10 +18,10 @@ export function ProdutoSelect({ produtos, valor, onChange, erro }: IProdutoSelec
         id="produto"
         className={`campo-produto__select ${erro ? 'campo-produto__select--erro' : ''}`}
         value={valor}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => onChange(Number(e.target.value))}
         data-testid="produto-select"
       >
-        <option value="">Selecione um produto</option>
+        <option value={0}>Selecione um produto</option>
         {produtos.map((produto) => (
           <option key={produto.id} value={produto.id}>
             {produto.nome} - R$ {produto.preco.toFixed(2)} (Estoque: {produto.estoque})

@@ -17,6 +17,12 @@ export const PRODUTOS_FIXTURE = {
     preco: 44.90,
     estoque: 3,
   },
+  IPHONE_11: {
+    id: 'prod-7',
+    nome: 'Capinha iPhone 11',
+    preco: 24.90,
+    estoque: 100,
+  },
 };
 
 export const CENARIOS_CHECKOUT = {
@@ -26,9 +32,9 @@ export const CENARIOS_CHECKOUT = {
     valorTotal: 99.80,
   },
   ESTOQUE_EXATO: {
-    produto: PRODUTOS_FIXTURE.SAMSUNG_S24,
-    quantidade: 5,
-    valorTotal: 199.50,
+    produto: PRODUTOS_FIXTURE.IPHONE_11,
+    quantidade: 10,
+    valorTotal: 249.00,
   },
   ESTOQUE_INSUFICIENTE: {
     produto: PRODUTOS_FIXTURE.IPHONE_14,

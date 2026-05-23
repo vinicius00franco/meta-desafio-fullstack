@@ -1,4 +1,4 @@
 export interface ICheckoutRequest {
-  produtoId: string;
+  produtoId: number;
   quantidade: number;
 }
