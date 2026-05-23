@@ -1,0 +1,63 @@
+.estado-erro {
+  padding: 16px;
+  background: #fef2f2;
+  border-radius: 8px;
+  border: 2px solid #ef4444;
+}
+
+.estado-erro__titulo {
+  font-size: 18px;
+  font-weight: 700;
+  color: #991b1b;
+  margin: 0 0 16px 0;
+}
+
+.estado-erro__campo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #fecaca;
+}
+
+.estado-erro__label {
+  font-size: 14px;
+  color: #991b1b;
+  font-weight: 500;
+}
+
+.estado-erro__valor {
+  font-size: 14px;
+  color: #991b1b;
+  font-weight: 600;
+}
+
+.estado-erro__mensagem {
+  background: #fee2e2;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.estado-erro__mensagem p {
+  font-size: 14px;
+  color: #dc2626;
+  font-weight: 600;
+  margin: 0;
+}
+
+.estado-erro__botao-tentar {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #ef4444;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.estado-erro__botao-tentar:hover {
+  background: #dc2626;
+}

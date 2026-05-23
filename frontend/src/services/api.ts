@@ -1,7 +1,7 @@
 import axios from 'axios';
-import type { ICheckoutResponse } from '../types/IApiResponse';
-import type { ICheckoutFormData } from '../types/ICheckoutFormData';
-import type { IProduto } from '../types/IProduto';
+import type { ICheckoutResponse } from '@/types/IApiResponse';
+import type { ICheckoutFormData } from '@/types/ICheckoutFormData';
+import type { IProduto } from '@/types/IProduto';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -19,12 +19,8 @@ export async function processarCheckout(
   return response.data;
 }
 
-<<<<<<< Updated upstream
-export async function obterProdutos(): Promise<IProduto[]> {
-  const response = await api.get<IProduto[]>('/produtos');
-=======
 interface RespostaProdutos {
-  produtos: Produto[];
+  produtos: IProduto[];
   paginacao: {
     pagina: number;
     limite: number;
@@ -37,6 +33,5 @@ export async function obterProdutos(pagina: number = 1, limite: number = 10): Pr
   const response = await api.get<RespostaProdutos>('/produtos', {
     params: { pagina, limite },
   });
->>>>>>> Stashed changes
   return response.data;
 }

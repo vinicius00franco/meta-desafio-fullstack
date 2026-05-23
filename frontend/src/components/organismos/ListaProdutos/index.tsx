@@ -1,10 +1,10 @@
-import type { Produto } from '@/types/IProduto';
+import type { IProduto } from '@/types/IProduto';
 import { CardProduto } from '@/components/moleculas/CardProduto';
 import './index.css';
 
 interface IListaProdutosProps {
-  produtos: Produto[];
-  aoAdicionarAoCarrinho: (produto: Produto, quantidade: number) => void;
+  produtos: IProduto[];
+  aoAdicionarAoCarrinho: (produto: IProduto, quantidade: number) => void;
 }
 
 export function ListaProdutos({ 
@@ -12,9 +12,9 @@ export function ListaProdutos({
   aoAdicionarAoCarrinho 
 }: IListaProdutosProps) {
   return (
-    <div className="lista-produtos" data-testid="lista-produtos">
+    <div className="lista-produtos">
       <h2 className="lista-produtos__titulo">PRODUTOS DISPONÍVEIS</h2>
-      <div className="lista-produtos__grid" data-testid="grid-produtos">
+      <div className="lista-produtos__grid">
         {produtos.map((produto) => (
           <CardProduto
             key={produto.id}

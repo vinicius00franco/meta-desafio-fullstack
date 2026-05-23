@@ -1,13 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-<<<<<<< Updated upstream
-import type { PayloadAction } from '@reduxjs/toolkit';
-import type { IProduto } from '../types/IProduto';
-import { obterProdutos } from '../services/api';
-
-interface ProdutoState {
-  produtos: IProduto[];
-=======
-import type { Produto } from '@/types/IProduto';
+import type { IProduto } from '@/types/IProduto';
 import { obterProdutos } from '@/services/api';
 
 interface IPaginacao {
@@ -18,15 +10,14 @@ interface IPaginacao {
 }
 
 interface IProdutoState {
-  produtos: Produto[];
->>>>>>> Stashed changes
+  produtos: IProduto[];
   carregando: boolean;
   erro: string | null;
   paginacao: IPaginacao | null;
   carregandoMais: boolean;
 }
 
-const estadoInicial: ProdutoState = {
+const estadoInicial: IProdutoState = {
   produtos: [],
   carregando: false,
   erro: null,
@@ -60,9 +51,6 @@ const produtoSlice = createSlice({
         }
         state.erro = null;
       })
-<<<<<<< Updated upstream
-      .addCase(buscarProdutos.fulfilled, (state, action: PayloadAction<IProduto[]>) => {
-=======
       .addCase(buscarProdutos.fulfilled, (state, action) => {
         const { produtos, paginacao } = action.payload;
         
@@ -73,7 +61,6 @@ const produtoSlice = createSlice({
         }
         
         state.paginacao = paginacao;
->>>>>>> Stashed changes
         state.carregando = false;
         state.carregandoMais = false;
         state.erro = null;
@@ -86,11 +73,8 @@ const produtoSlice = createSlice({
   },
 });
 
-<<<<<<< Updated upstream
-=======
 export const { limparProdutos } = produtoSlice.actions;
 
 export type { IProdutoState };
 
->>>>>>> Stashed changes
 export default produtoSlice.reducer;

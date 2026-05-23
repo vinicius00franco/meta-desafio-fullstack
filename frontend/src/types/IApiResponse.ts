@@ -6,7 +6,7 @@ export interface ICheckoutResponse {
   estoqueAtual: number;
 }
 
-export interface IErroResponse {
+export interface IRespostaErro {
   mensagem: string;
   estoqueDisponivel?: number;
 }

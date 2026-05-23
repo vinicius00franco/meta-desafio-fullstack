@@ -2,7 +2,7 @@ import './index.css';
 
 export function EstadoProcessando() {
   return (
-    <div className="estado-processando" role="status" aria-live="polite" data-testid="estado-processando">
+    <div className="estado-processando" role="status" aria-live="polite">
       <h2 className="estado-processando__titulo">PROCESSANDO COMPRA</h2>
       <div className="estado-processando__loading">
         <p>⏳ Processando...</p>
@@ -21,7 +21,7 @@ export function EstadoProcessando() {
         </div>
         <p className="estado-processando__porcentagem">40%</p>
       </div>
-      <button className="estado-processando__botao-cancelar" onClick={() => {}} aria-label="Cancelar compra" data-testid="botao-cancelar-compra">
+      <button className="estado-processando__botao-cancelar" onClick={() => {}} aria-label="Cancelar compra">
         CANCELAR
       </button>
     </div>

@@ -1,14 +1,14 @@
-import './NotificacaoToast.css';
+import './index.css';
 
 type TipoNotificacao = 'sucesso' | 'erro' | 'aviso' | 'informacao';
 
-interface NotificacaoToastProps {
+interface INotificacaoToastProps {
   mensagem: string;
   tipo: TipoNotificacao;
   onClose: () => void;
 }
 
-export function NotificacaoToast({ mensagem, tipo, onClose }: NotificacaoToastProps) {
+export function NotificacaoToast({ mensagem, tipo, onClose }: INotificacaoToastProps) {
   return (
     <div className={`notificacao-toast notificacao-toast--${tipo}`}>
       <div className="notificacao-toast__conteudo">

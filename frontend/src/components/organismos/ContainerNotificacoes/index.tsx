@@ -1,15 +1,16 @@
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { removerNotificacao } from '../../store/notificacaoSlice';
-import { NotificacaoToast } from '../molecules/NotificacaoToast';
-import './ContainerNotificacoes.css';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { removerNotificacao } from '@/store/notificacaoSlice';
+import type { INotificacao } from '@/store/notificacaoSlice';
+import { NotificacaoToast } from '@/components/moleculas/NotificacaoToast';
+import './index.css';
 
 export function ContainerNotificacoes() {
   const dispatch = useAppDispatch();
   const notificacoes = useAppSelector((state) => state.notificacoes.notificacoes);
 
   useEffect(() => {
-    notificacoes.forEach((notificacao) => {
+    notificacoes.forEach((notificacao: INotificacao) => {
       const duracao = notificacao.duracao || 5000;
       const timer = setTimeout(() => {
         dispatch(removerNotificacao(notificacao.id));
@@ -21,7 +22,7 @@ export function ContainerNotificacoes() {
 
   return (
     <div className="container-notificacoes">
-      {notificacoes.map((notificacao) => (
+      {notificacoes.map((notificacao: INotificacao) => (
         <NotificacaoToast
           key={notificacao.id}
           mensagem={notificacao.mensagem}

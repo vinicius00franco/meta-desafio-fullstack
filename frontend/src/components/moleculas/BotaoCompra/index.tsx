@@ -1,4 +1,4 @@
-import './BotaoCompra.css';
+import './index.css';
 
 interface IBotaoCompraProps {
   onClick: () => void;

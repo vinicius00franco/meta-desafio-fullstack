@@ -1,0 +1,144 @@
+.indicador-etapas-checkout {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.indicador-etapas-checkout__titulo {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.indicador-etapas-checkout__etapas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.indicador-etapas-checkout__etapa {
+  display: flex;
+  gap: 12px;
+  position: relative;
+}
+
+.indicador-etapas-checkout__linha-conectora {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.indicador-etapas-checkout__linha {
+  width: 2px;
+  height: 100%;
+  background: #e2e8f0;
+  margin-top: 8px;
+}
+
+.indicador-etapas-checkout__etapa--concluida .indicador-etapas-checkout__linha {
+  background: #10b981;
+}
+
+.indicador-etapas-checkout__etapa--em-andamento .indicador-etapas-checkout__linha {
+  background: linear-gradient(to bottom, #10b981 50%, #e2e8f0 50%);
+}
+
+.indicador-etapas-checkout__conteudo-etapa {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+}
+
+.indicador-etapas-checkout__icone-wrapper {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.indicador-etapas-checkout__icone {
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #e2e8f0;
+  color: #64748b;
+}
+
+.indicador-etapas-checkout__icone--concluida {
+  background: #10b981;
+  border-color: #10b981;
+  color: white;
+}
+
+.indicador-etapas-checkout__icone--em-andamento {
+  background: #f59e0b;
+  border-color: #f59e0b;
+  color: white;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.indicador-etapas-checkout__icone--pendente {
+  background: white;
+  border-color: #e2e8f0;
+  color: #94a3b8;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.indicador-etapas-checkout__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.indicador-etapas-checkout__nome-etapa {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.indicador-etapas-checkout__etapa--concluida .indicador-etapas-checkout__nome-etapa {
+  color: #065f46;
+}
+
+.indicador-etapas-checkout__etapa--em-andamento .indicador-etapas-checkout__nome-etapa {
+  color: #92400e;
+}
+
+.indicador-etapas-checkout__etapa--pendente .indicador-etapas-checkout__nome-etapa {
+  color: #64748b;
+}
+
+.indicador-etapas-checkout__descricao-etapa {
+  font-size: 11px;
+  color: #64748b;
+  margin: 0;
+}
+
+.indicador-etapas-checkout__etapa--em-andamento .indicador-etapas-checkout__descricao-etapa {
+  color: #92400e;
+  font-style: italic;
+}

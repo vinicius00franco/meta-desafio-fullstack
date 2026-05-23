@@ -1,4 +1,4 @@
-import './ToastFeedback.css';
+import './index.css';
 
 interface IToastFeedbackProps {
   mensagem: string;

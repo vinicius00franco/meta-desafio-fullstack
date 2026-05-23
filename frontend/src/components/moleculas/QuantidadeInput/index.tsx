@@ -1,4 +1,4 @@
-import './QuantidadeInput.css';
+import './index.css';
 
 interface IQuantidadeInputProps {
   valor: number;

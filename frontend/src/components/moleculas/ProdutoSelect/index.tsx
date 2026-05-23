@@ -1,8 +1,8 @@
-import type { IProduto } from '../../types/IProduto';
-import './ProdutoSelect.css';
+import type { Produto } from '@/types/IProduto';
+import './index.css';
 
 interface IProdutoSelectProps {
-  produtos: IProduto[];
+  produtos: Produto[];
   valor: number;
   onChange: (valor: number) => void;
   erro?: string;

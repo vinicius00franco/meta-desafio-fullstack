@@ -1,10 +1,10 @@
-import './Carregando.css';
+import './index.css';
 
-interface CarregandoProps {
+interface ICarregandoProps {
   mensagem?: string;
 }
 
-export function Carregando({ mensagem = 'Carregando...' }: CarregandoProps) {
+export function Carregando({ mensagem = 'Carregando...' }: ICarregandoProps) {
   return (
     <div className="carregando">
       <div className="carregando__container">

@@ -3,18 +3,18 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 
 type TipoNotificacao = 'sucesso' | 'erro' | 'aviso' | 'informacao';
 
-interface Notificacao {
+interface INotificacao {
   id: string;
   mensagem: string;
   tipo: TipoNotificacao;
   duracao?: number;
 }
 
-interface NotificacaoState {
-  notificacoes: Notificacao[];
+interface INotificacaoState {
+  notificacoes: INotificacao[];
 }
 
-const estadoInicial: NotificacaoState = {
+const estadoInicial: INotificacaoState = {
   notificacoes: [],
 };
 
@@ -22,7 +22,7 @@ const notificacaoSlice = createSlice({
   name: 'notificacoes',
   initialState: estadoInicial,
   reducers: {
-    adicionarNotificacao: (state, action: PayloadAction<Omit<Notificacao, 'id'>>) => {
+    adicionarNotificacao: (state, action: PayloadAction<Omit<INotificacao, 'id'>>) => {
       const id = Date.now().toString();
       state.notificacoes.push({
         ...action.payload,
@@ -39,5 +39,7 @@ const notificacaoSlice = createSlice({
 });
 
 export const { adicionarNotificacao, removerNotificacao, limparNotificacoes } = notificacaoSlice.actions;
+
+export type { INotificacao, INotificacaoState };
 
 export default notificacaoSlice.reducer;
