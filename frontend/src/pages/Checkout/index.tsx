@@ -125,6 +125,11 @@ export function Checkout() {
 
   const quantidadeTotalItens = carrinho.reduce((total, item) => total + item.quantidade, 0);
 
+  const obterQuantidadeNoCarrinho = (produtoId: number): number => {
+    const item = carrinho.find((item) => item.produto.id === produtoId);
+    return item ? item.quantidade : 0;
+  };
+
   const produtosFiltrados = produtos;
 
   if (carregandoProdutos) {
@@ -178,6 +183,7 @@ export function Checkout() {
           <ListaProdutos
             produtos={produtosFiltrados}
             aoAdicionarAoCarrinho={handleAdicionarAoCarrinho}
+            obterQuantidadeNoCarrinho={obterQuantidadeNoCarrinho}
           />
           {paginacao && paginacao.pagina < paginacao.totalPaginas && (
             <div ref={carregarMaisRef} className="checkout__carregar-mais">

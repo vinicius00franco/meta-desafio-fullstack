@@ -4,19 +4,21 @@ import './index.css';
 interface ICardProdutoProps {
   produto: IProduto;
   aoAdicionarAoCarrinho: (produto: IProduto, quantidade: number) => void;
+  quantidadeNoCarrinho?: number;
 }
 
 const formatarMoeda = (valor: number): string => {
   return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 };
 
-export function CardProduto({ produto, aoAdicionarAoCarrinho }: ICardProdutoProps) {
+export function CardProduto({ produto, aoAdicionarAoCarrinho, quantidadeNoCarrinho = 0 }: ICardProdutoProps) {
   const semEstoque = produto.estoque === 0;
   const estoqueBaixo = produto.estoque > 0 && produto.estoque <= 10;
+  const temNoCarrinho = quantidadeNoCarrinho > 0;
   
   return (
     <div 
-      className={`card-produto ${semEstoque ? 'card-produto--sem-estoque' : ''}`}
+      className={`card-produto ${semEstoque ? 'card-produto--sem-estoque' : ''} ${temNoCarrinho ? 'card-produto--selecionado' : ''}`}
       role="button"
       tabIndex={0}
     >
@@ -29,14 +31,21 @@ export function CardProduto({ produto, aoAdicionarAoCarrinho }: ICardProdutoProp
       {semEstoque && (
         <p className="card-produto__estoque card-produto__estoque--esgotado">Esgotado</p>
       )}
-      <button
-        className={`card-produto__botao ${semEstoque ? 'card-produto__botao--desabilitado' : ''}`}
-        onClick={() => !semEstoque && aoAdicionarAoCarrinho(produto, 1)}
-        disabled={semEstoque}
-        aria-label={semEstoque ? `${produto.nome} esgotado` : `Selecionar ${produto.nome}`}
-      >
-        SELECIONAR
-      </button>
+      <div className="card-produto__acoes">
+        <button
+          className={`card-produto__botao ${semEstoque ? 'card-produto__botao--desabilitado' : ''} ${temNoCarrinho ? 'card-produto__botao--selecionado' : ''}`}
+          onClick={() => !semEstoque && aoAdicionarAoCarrinho(produto, 1)}
+          disabled={semEstoque}
+          aria-label={semEstoque ? `${produto.nome} esgotado` : `Selecionar ${produto.nome}`}
+        >
+          {temNoCarrinho ? 'ADICIONAR' : 'SELECIONAR'}
+        </button>
+        {temNoCarrinho && (
+          <div className="card-produto__badge-quantidade" data-testid={`badge-quantidade-${produto.id}`}>
+            {quantidadeNoCarrinho}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -5,11 +5,13 @@ import './index.css';
 interface IListaProdutosProps {
   produtos: IProduto[];
   aoAdicionarAoCarrinho: (produto: IProduto, quantidade: number) => void;
+  obterQuantidadeNoCarrinho: (produtoId: number) => number;
 }
 
 export function ListaProdutos({ 
   produtos, 
-  aoAdicionarAoCarrinho 
+  aoAdicionarAoCarrinho,
+  obterQuantidadeNoCarrinho 
 }: IListaProdutosProps) {
   return (
     <div className="lista-produtos">
@@ -20,6 +22,7 @@ export function ListaProdutos({
             key={produto.id}
             produto={produto}
             aoAdicionarAoCarrinho={aoAdicionarAoCarrinho}
+            quantidadeNoCarrinho={obterQuantidadeNoCarrinho(produto.id)}
           />
         ))}
       </div>
