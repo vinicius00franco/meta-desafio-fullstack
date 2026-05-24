@@ -8,7 +8,7 @@ interface ICabecalhoProps {
 
 export function Cabecalho({ aoAlternarCarrinho, carrinhoAberto, quantidadeItens }: ICabecalhoProps) {
   return (
-    <header className="cabecalho">
+    <header className="cabecalho" data-testid="cabecalho">
       <div className="cabecalho__conteudo">
         <h1 className="cabecalho__logo">CaseCellShop</h1>
         <p className="cabecalho__subtitulo">📱 Capinhas</p>
@@ -19,6 +19,7 @@ export function Cabecalho({ aoAlternarCarrinho, carrinhoAberto, quantidadeItens 
         onClick={aoAlternarCarrinho}
         aria-label={carrinhoAberto ? 'Fechar carrinho' : 'Abrir carrinho'}
         aria-expanded={carrinhoAberto}
+        data-testid="botao-abrir-carrinho"
       >
         <svg
           className="cabecalho__icone-carrinho"
@@ -36,7 +37,7 @@ export function Cabecalho({ aoAlternarCarrinho, carrinhoAberto, quantidadeItens 
           <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
         </svg>
         {quantidadeItens > 0 && (
-          <span className="cabecalho__badge">{quantidadeItens}</span>
+          <span className="cabecalho__badge" data-testid="badge-quantidade-itens">{quantidadeItens}</span>
         )}
       </button>
     </header>

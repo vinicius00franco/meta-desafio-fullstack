@@ -1,6 +1,6 @@
 export interface ICheckoutResponse {
   id: string;
-  produtoId: string;
+  produtoId: number;
   quantidade: number;
   valorTotal: number;
   estoqueAtual: number;

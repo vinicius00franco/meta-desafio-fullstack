@@ -21,6 +21,7 @@ export function CardProduto({ produto, aoAdicionarAoCarrinho, quantidadeNoCarrin
       className={`card-produto ${semEstoque ? 'card-produto--sem-estoque' : ''} ${temNoCarrinho ? 'card-produto--selecionado' : ''}`}
       role="button"
       tabIndex={0}
+      data-testid={`card-produto-${produto.id}`}
     >
       <img src={produto.urlImagem} alt={produto.nome} className="card-produto__imagem" />
       <h3 className="card-produto__nome">{produto.nome}</h3>
@@ -37,6 +38,7 @@ export function CardProduto({ produto, aoAdicionarAoCarrinho, quantidadeNoCarrin
           onClick={() => !semEstoque && aoAdicionarAoCarrinho(produto, 1)}
           disabled={semEstoque}
           aria-label={semEstoque ? `${produto.nome} esgotado` : `Selecionar ${produto.nome}`}
+          data-testid={`botao-adicionar-${produto.id}`}
         >
           {temNoCarrinho ? 'ADICIONAR' : 'SELECIONAR'}
         </button>

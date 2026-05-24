@@ -1,27 +1,27 @@
 export const PRODUTOS_FIXTURE = {
   IPHONE_15: {
-    id: 'prod-1',
-    nome: 'Capinha iPhone 15',
-    preco: 49.90,
+    id: 1,
+    nome: 'Capinha iPhone 15 Pro Max',
+    preco: 89.90,
     estoque: 10,
   },
   SAMSUNG_S24: {
-    id: 'prod-2',
-    nome: 'Capinha Samsung S24',
-    preco: 39.90,
-    estoque: 5,
+    id: 2,
+    nome: 'Capinha Samsung Galaxy S24',
+    preco: 79.90,
+    estoque: 15,
   },
   IPHONE_14: {
-    id: 'prod-3',
+    id: 3,
     nome: 'Capinha iPhone 14',
-    preco: 44.90,
-    estoque: 3,
+    preco: 69.90,
+    estoque: 8,
   },
   IPHONE_11: {
-    id: 'prod-7',
-    nome: 'Capinha iPhone 11',
-    preco: 24.90,
-    estoque: 100,
+    id: 7,
+    nome: 'Capinha iPhone 12',
+    preco: 54.90,
+    estoque: 25,
   },
 };
 
@@ -29,17 +29,17 @@ export const CENARIOS_CHECKOUT = {
   SUCESSO: {
     produto: PRODUTOS_FIXTURE.IPHONE_15,
     quantidade: 2,
-    valorTotal: 99.80,
+    valorTotal: 179.80,
   },
   ESTOQUE_EXATO: {
-    produto: PRODUTOS_FIXTURE.IPHONE_11,
+    produto: PRODUTOS_FIXTURE.SAMSUNG_S24,
     quantidade: 10,
-    valorTotal: 249.00,
+    valorTotal: 799.00,
   },
   ESTOQUE_INSUFICIENTE: {
     produto: PRODUTOS_FIXTURE.IPHONE_14,
-    quantidade: 5,
-    estoqueDisponivel: 3,
+    quantidade: 10,
+    estoqueDisponivel: 8,
   },
   QUANTIDADE_INVALIDA: {
     quantidade: -1,

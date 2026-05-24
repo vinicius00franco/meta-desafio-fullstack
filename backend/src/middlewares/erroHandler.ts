@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { logger } from '../utils/logger';
+import { ErroEstoqueInsuficiente } from '../utils/Erros';
 
 export function erroHandler(
   erro: Error,
@@ -16,6 +17,14 @@ export function erroHandler(
 
   if (erro.name === 'ErroProdutoNaoEncontrado') {
     res.status(404).json({ mensagem: erro.message });
+    return;
+  }
+
+  if (erro instanceof ErroEstoqueInsuficiente) {
+    res.status(400).json({ 
+      mensagem: erro.message,
+      estoqueDisponivel: erro.estoqueDisponivel,
+    });
     return;
   }
 

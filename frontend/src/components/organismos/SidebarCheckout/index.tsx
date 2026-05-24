@@ -84,7 +84,7 @@ export function SidebarCheckout({
   }
 
   return (
-    <div className={`sidebar-checkout ${estado === 'processando' ? 'sidebar-checkout--processando' : ''}`} data-testid="sidebar-carrinho">
+    <div className={`sidebar-checkout ${estado === 'processando' ? 'sidebar-checkout--processando' : ''}`} data-testid={estado === 'processando' ? 'sidebar-processando' : 'sidebar-carrinho'}>
       <div className={`sidebar-checkout__conteudo ${shake ? 'sidebar-checkout__conteudo--shake' : ''}`}>
         <div className="sidebar-checkout__cabecalho">
         <h2 className="sidebar-checkout__titulo">SEU CARRINHO</h2>

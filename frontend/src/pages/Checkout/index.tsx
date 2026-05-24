@@ -7,6 +7,8 @@ import { SidebarCheckout } from '@/components/organismos/SidebarCheckout';
 import { Cabecalho } from '@/components/organismos/Cabecalho';
 import { ListaProdutos } from '@/components/organismos/ListaProdutos';
 import { EstadoCarregando } from '@/components/organismos/EstadoCarregando';
+import { processarCarrinho } from '@/services/api';
+import type { ICarrinhoRequest } from '@/types/ICarrinhoRequest';
 import './index.css';
 
 type EstadoCheckout = 'inicial' | 'processando' | 'sucesso' | 'erro';
@@ -102,19 +104,27 @@ export function Checkout() {
 
     setEstado('processando');
 
-    setTimeout(() => {
-      const estoqueInsuficiente = carrinho.find(
-        (item) => item.quantidade > item.produto.estoque
-      );
-      if (estoqueInsuficiente) {
-        setEstado('erro');
-        setMensagemErro(
-          `Estoque insuficiente para ${estoqueInsuficiente.produto.nome}. Disponível: ${estoqueInsuficiente.produto.estoque} unidades`
-        );
+    try {
+      const request: ICarrinhoRequest = {
+        itens: carrinho.map((item) => ({
+          produtoId: item.produto.id,
+          quantidade: item.quantidade,
+        })),
+      };
+
+      const response = await processarCarrinho(request);
+      console.log('Checkout realizado com sucesso:', response);
+      setEstado('sucesso');
+    } catch (error: any) {
+      console.error('Erro ao processar checkout:', error);
+      setEstado('erro');
+      
+      if (error.response?.data?.mensagem) {
+        setMensagemErro(error.response.data.mensagem);
       } else {
-        setEstado('sucesso');
+        setMensagemErro('Erro ao processar compra. Tente novamente.');
       }
-    }, 3000);
+    }
   };
 
   const handleNovaCompra = () => {

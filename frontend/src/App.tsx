@@ -8,7 +8,7 @@ function App() {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(buscarProdutos())
+    dispatch(buscarProdutos({ pagina: 1, limite: 10 }))
   }, [dispatch])
 
   return <Checkout />

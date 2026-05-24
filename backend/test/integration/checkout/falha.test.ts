@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
 import { app } from '../../../src/index';
-import { CENARIOS_CHECKOUT } from '../../fixtures/produtos';
-import { configurarAmbienteCheckout } from './setup';
+import { CENARIOS_CHECKOUT, PRODUTOS_FIXTURE } from '../../fixtures/produtos';
+import { seedService } from '../../../src/index';
 
 describe('POST /checkout - Cenários de Falha', () => {
   beforeEach(() => {
-    configurarAmbienteCheckout();
+    seedService.carregarSeed(PRODUTOS_FIXTURE);
   });
 
   it('deve retornar erro quando estoque insuficiente', async () => {
@@ -17,11 +17,8 @@ describe('POST /checkout - Cenários de Falha', () => {
       .send(requestBody);
 
     expect(response.status).toBe(400);
-    expect(response.body.sucesso).toBe(false);
-    expect(response.body.erro.mensagem).toBe('Estoque insuficiente');
-    expect(response.body.erro.codigo).toBe('ESTOQUE_INSUFICIENTE');
-    expect(response.body.erro.detalhes).toHaveProperty('estoqueDisponivel');
-    expect(response.body.erro.detalhes.estoqueDisponivel).toBe(requestBody.estoqueDisponivel);
+    expect(response.body.mensagem).toBe('Estoque insuficiente');
+    expect(response.body.estoqueDisponivel).toBe(requestBody.estoqueDisponivel);
   });
 
   it('deve retornar erro quando produto não encontrado', async () => {
@@ -32,8 +29,6 @@ describe('POST /checkout - Cenários de Falha', () => {
       .send(requestBody);
 
     expect(response.status).toBe(404);
-    expect(response.body.sucesso).toBe(false);
-    expect(response.body.erro.mensagem).toBe('Produto não encontrado');
-    expect(response.body.erro.codigo).toBe('RECURSO_NAO_ENCONTRADO');
+    expect(response.body.mensagem).toBe('Produto não encontrado');
   });
 });

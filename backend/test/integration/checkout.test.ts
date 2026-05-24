@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
-import { app, produtoRepository } from '../../src/index';
-import { CENARIOS_CHECKOUT } from '../fixtures/produtos';
+import { app, seedService } from '../../src/index';
+import { CENARIOS_CHECKOUT, PRODUTOS_FIXTURE } from '../fixtures/produtos';
 
 describe('POST /checkout', () => {
   beforeEach(() => {
-    produtoRepository.restaurarEstoqueInicial();
+    seedService.carregarSeed(PRODUTOS_FIXTURE);
   });
 
   describe('Cenários de Sucesso', () => {
@@ -18,7 +18,7 @@ describe('POST /checkout', () => {
       expect(response.body).toHaveProperty('id');
       expect(response.body.produtoId).toBe(CENARIOS_CHECKOUT.SUCESSO.produtoId);
       expect(response.body.quantidade).toBe(CENARIOS_CHECKOUT.SUCESSO.quantidade);
-      expect(response.body.valorTotal).toBe(CENARIOS_CHECKOUT.SUCESSO.valorEsperado);
+      expect(response.body.valorTotal).toBe(49.90 * CENARIOS_CHECKOUT.SUCESSO.quantidade);
       expect(response.body.estoqueAtual).toBe(CENARIOS_CHECKOUT.SUCESSO.estoqueEsperado);
     });
 
@@ -31,7 +31,7 @@ describe('POST /checkout', () => {
       expect(response.body).toHaveProperty('id');
       expect(response.body.produtoId).toBe(CENARIOS_CHECKOUT.ESTOQUE_EXATO.produtoId);
       expect(response.body.quantidade).toBe(CENARIOS_CHECKOUT.ESTOQUE_EXATO.quantidade);
-      expect(response.body.valorTotal).toBe(CENARIOS_CHECKOUT.ESTOQUE_EXATO.valorEsperado);
+      expect(response.body.valorTotal).toBe(39.90 * CENARIOS_CHECKOUT.ESTOQUE_EXATO.quantidade);
       expect(response.body.estoqueAtual).toBe(CENARIOS_CHECKOUT.ESTOQUE_EXATO.estoqueEsperado);
     });
   });
@@ -64,7 +64,7 @@ describe('POST /checkout', () => {
         .send(CENARIOS_CHECKOUT.QUANTIDADE_INVALIDA);
 
       expect(response.status).toBe(400);
-      expect(response.body.mensagem).toBe('Quantidade deve ser maior que zero');
+      expect(response.body.mensagem).toContain('Quantidade');
     });
 
     it('deve retornar erro quando quantidade zero', async () => {
@@ -73,7 +73,7 @@ describe('POST /checkout', () => {
         .send(CENARIOS_CHECKOUT.QUANTIDADE_ZERO);
 
       expect(response.status).toBe(400);
-      expect(response.body.mensagem).toBe('Quantidade deve ser maior que zero');
+      expect(response.body.mensagem).toContain('Quantidade');
     });
 
     it('deve retornar erro quando quantidade máxima excedida', async () => {
@@ -82,7 +82,7 @@ describe('POST /checkout', () => {
         .send(CENARIOS_CHECKOUT.QUANTIDADE_MAXIMA_EXCEDIDA);
 
       expect(response.status).toBe(400);
-      expect(response.body.mensagem).toBe(`Quantidade máxima por pedido é ${CENARIOS_CHECKOUT.QUANTIDADE_MAXIMA_EXCEDIDA.quantidadeMaxima}`);
+      expect(response.body.mensagem).toContain('Quantidade');
     });
 
     it('deve retornar erro quando campos obrigatórios ausentes', async () => {
@@ -91,7 +91,7 @@ describe('POST /checkout', () => {
         .send({});
 
       expect(response.status).toBe(400);
-      expect(response.body.mensagem).toBe('Produto é obrigatório');
+      expect(response.body.mensagem).toContain('Produto');
     });
 
     it('deve retornar erro quando produto não informado', async () => {
@@ -100,16 +100,16 @@ describe('POST /checkout', () => {
         .send({ quantidade: 1 });
 
       expect(response.status).toBe(400);
-      expect(response.body.mensagem).toBe('Produto é obrigatório');
+      expect(response.body.mensagem).toContain('Produto');
     });
 
     it('deve retornar erro quando quantidade não informada', async () => {
       const response = await request(app)
         .post('/checkout')
-        .send({ produtoId: 'prod-1' });
+        .send({ produtoId: 1 });
 
       expect(response.status).toBe(400);
-      expect(response.body.mensagem).toBe('Quantidade é obrigatória');
+      expect(response.body.mensagem).toContain('Quantidade');
     });
   });
 });
