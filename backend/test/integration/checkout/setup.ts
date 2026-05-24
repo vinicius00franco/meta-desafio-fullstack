@@ -1,7 +1,6 @@
-import { produtoRepository } from '../../../src/index';
-import { carregarSeedProdutos } from '../../helpers/carregarSeed';
+import { seedService } from '../../../src/index';
+import { PRODUTOS_FIXTURE } from '../../fixtures/produtos';
 
 export function configurarAmbienteCheckout(): void {
-  const produtosSeed = carregarSeedProdutos();
-  produtoRepository.restaurarEstoqueInicial(produtosSeed);
+  seedService.carregarSeed(PRODUTOS_FIXTURE);
 }

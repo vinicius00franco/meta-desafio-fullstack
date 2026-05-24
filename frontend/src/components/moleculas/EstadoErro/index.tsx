@@ -12,7 +12,7 @@ const formatarMoeda = (valor: number): string => {
 
 export function EstadoErro({ valorTotal, mensagemErro, aoTentarNovamente }: IEstadoErroProps) {
   return (
-    <div className="estado-erro" role="alert" aria-live="assertive">
+    <div className="estado-erro" role="alert" aria-live="assertive" data-testid="estado-erro">
       <h2 className="estado-erro__titulo">SEU CARRINHO</h2>
       
       <div className="estado-erro__campo">
@@ -21,7 +21,7 @@ export function EstadoErro({ valorTotal, mensagemErro, aoTentarNovamente }: IEst
       </div>
       
       <div className="estado-erro__mensagem">
-        <p>❌ {mensagemErro || 'Erro ao processar compra'}</p>
+        <p data-testid="mensagem-erro">❌ {mensagemErro || 'Erro ao processar compra'}</p>
       </div>
       
       <button className="estado-erro__botao-tentar" onClick={aoTentarNovamente} aria-label="Tentar realizar a compra novamente">

@@ -2,7 +2,7 @@ import './index.css';
 
 export function EstadoProcessando() {
   return (
-    <div className="estado-processando" role="status" aria-live="polite">
+    <div className="estado-processando" role="status" aria-live="polite" data-testid="estado-processando">
       <h2 className="estado-processando__titulo">PROCESSANDO COMPRA</h2>
       <div className="estado-processando__loading">
         <p>⏳ Processando...</p>

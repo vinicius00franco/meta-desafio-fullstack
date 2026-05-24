@@ -11,7 +11,7 @@ const formatarMoeda = (valor: number): string => {
 
 export function EstadoSucesso({ valorTotal, aoNovaCompra }: IEstadoSucessoProps) {
   return (
-    <div className="estado-sucesso" role="alert" aria-live="assertive">
+    <div className="estado-sucesso" role="alert" aria-live="assertive" data-testid="estado-sucesso">
       <h2 className="estado-sucesso__titulo">✅ COMPRA REALIZADA!</h2>
       <p className="estado-sucesso__mensagem">Sua compra foi processada com sucesso!</p>
       
@@ -20,7 +20,7 @@ export function EstadoSucesso({ valorTotal, aoNovaCompra }: IEstadoSucessoProps)
         <span className="estado-sucesso__valor estado-sucesso__valor--destaque">{formatarMoeda(valorTotal)}</span>
       </div>
       
-      <button className="estado-sucesso__botao-nova-compra" onClick={aoNovaCompra} aria-label="Iniciar nova compra">
+      <button className="estado-sucesso__botao-nova-compra" onClick={aoNovaCompra} aria-label="Iniciar nova compra" data-testid="botao-nova-compra">
         NOVA COMPRA
       </button>
     </div>

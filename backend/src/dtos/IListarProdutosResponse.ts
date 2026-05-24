@@ -1,3 +1,5 @@
+import { IProduto } from '../models/IProduto';
+
 export interface IPaginacao {
   pagina: number;
   limite: number;
@@ -6,6 +8,6 @@ export interface IPaginacao {
 }
 
 export interface IListarProdutosResponse {
-  produtos: unknown[];
+  produtos: IProduto[];
   paginacao: IPaginacao;
 }

@@ -10,8 +10,3 @@ export interface ItemCarrinho {
   produto: IProduto;
   quantidade: number;
 }
-
-export interface ItemCarrinho {
-  produto: Produto;
-  quantidade: number;
-}

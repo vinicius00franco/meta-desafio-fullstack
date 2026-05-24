@@ -3,5 +3,5 @@ export interface IProduto {
   nome: string;
   preco: number;
   estoque: number;
-  urlImagem: string;
+  urlImagem: string | null;
 }

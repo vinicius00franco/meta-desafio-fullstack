@@ -1,8 +1,8 @@
-import type { Produto } from '@/types/IProduto';
+import type { IProduto } from '@/types/IProduto';
 import './index.css';
 
 interface InfoCarrinhoProps {
-  produto: Produto;
+  produto: IProduto;
   quantidade: number;
   valorTotal: number;
 }

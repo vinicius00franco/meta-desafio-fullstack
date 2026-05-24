@@ -1,13 +1,13 @@
 import { useState, useCallback } from 'react';
-import type { DadosCheckout } from '@/types/ICheckoutFormData';
-import type { ResultadoCheckout } from '@/types/IApiResponse';
+import type { ICheckoutFormData } from '@/types/ICheckoutFormData';
+import type { CheckoutResult } from '@/types/IApiResponse';
 import { processarCheckout } from '@/services/api';
 
 export function useCheckout() {
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<ResultadoCheckout | null>(null);
+  const [result, setResult] = useState<CheckoutResult | null>(null);
 
-  const executarCheckout = useCallback(async (dados: DadosCheckout) => {
+  const executarCheckout = useCallback(async (dados: ICheckoutFormData) => {
     setIsLoading(true);
     setResult(null);
 
