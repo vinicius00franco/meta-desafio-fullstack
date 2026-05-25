@@ -91,6 +91,29 @@ META/
 - ✅ Testes backend funcionando
 - ✅ Testes frontend configurados
 
+## Screenshots do Sistema
+
+### Tela Inicial - Lista de Produtos
+<img src="imgs/tela-inicial-produtos.png" alt="Tela Inicial" width="800">
+
+### Tela de Produto Selecionado
+<img src="imgs/tela-produto-selecionado.png" alt="Produto Selecionado" width="800">
+
+### Tela de Checkout - Detalhes
+<img src="imgs/tela-checkout-detalhes.png" alt="Checkout Detalhes" width="800">
+
+### Tela de Checkout - Confirmação e Sucesso
+<div style="display: flex; gap: 20px;">
+  <div>
+    <img src="imgs/tela-checkout-confirmacao.png" alt="Checkout Confirmação" width="400">
+    <p><strong>Confirmação</strong></p>
+  </div>
+  <div>
+    <img src="imgs/tela-checkout-sucesso.png" alt="Checkout Sucesso" width="400">
+    <p><strong>Sucesso</strong></p>
+  </div>
+</div>
+
 ## Documentação
 
 - `PROJECT.md` - Documentação completa do projeto
